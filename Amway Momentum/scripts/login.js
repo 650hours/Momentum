@@ -63,6 +63,7 @@
 					$("#resultBlock").html('<h2>Sorry, an error ocurred. Please try again.</h2>');	
                 },
 				cache: false}).done(function(data) {
+					window.localStorage.setItem("justPosted", 1);
 					navigateToPost();
 			    });
 		},

@@ -99,6 +99,7 @@ textarea {
 }
 .wallPost .postText {
 	padding-right: 0.5em;
+	margin-left: 0;
 }
 .wallPost .likesComments {
 	margin-top: 4px;

@@ -22,7 +22,7 @@ function loadAgenda() {
 
 	$.ajax({
 	url: 'http://amway.650h.co.uk/index/default/getAgenda',
-	error: handleAjaxError, cache: false}).done(function(data) {
+	error: handleAjaxError, cache: true}).done(function(data) {
 		
 		// Put content in place on the page
 		$("#agendaTitle").html(data.agendaTitle);
@@ -51,7 +51,7 @@ function loadHospitality() {
 	
 	$.ajax({
 	url: 'http://amway.650h.co.uk/index/default/getHospitality',
-	error: handleAjaxError, cache: false}).done(function(data) {
+	error: handleAjaxError, cache: true}).done(function(data) {
 
 		// Put content in place on the page
 		$("#introTitle").html(data.introTitle);
@@ -106,7 +106,7 @@ function loadWorkshopList() {
 
 	$.ajax({
 	url: 'http://amway.650h.co.uk/index/default/getWorkshopsList/' + uid,
-	error: handleAjaxError, cache: false}).done(function(data) {
+	error: handleAjaxError, cache: true}).done(function(data) {
 		
 		// Build the lists of user attended workshops and other workshops
 		$.each(data, function(i,item) {
@@ -150,7 +150,7 @@ function loadWorkshop(e) {
 
 	$.ajax({
 	url: 'http://amway.650h.co.uk/index/default/getWorkshop/' + workshopId,
-	error: handleAjaxError, cache: false}).done(function(data) {
+	error: handleAjaxError, cache: true}).done(function(data) {
 				
 		// Topics for this workshop
 		if(data.topics.length > 0) {
@@ -197,7 +197,7 @@ function loadTopic(e) {
 	
 	$.ajax({
 	url: 'http://amway.650h.co.uk/index/default/getTopic/' + topicId,
-	error: handleAjaxError, cache: false}).done(function(data) {
+	error: handleAjaxError, cache: true}).done(function(data) {
 		
 		// Put content in place on the page
 		$("#topicTitle").html(data.topicTitle);
@@ -262,30 +262,28 @@ function buildWallView(posts) {
 			'</div>' +
 			'<div style="margin-left: 62px; padding-right: 1em;">' +
 			'<p class="postText"><b>' + nck + ':</b> ' + ptx + '<br />' +
-			'<span class="lastUpdated"><nobr>' + item.lastUpdated + '</nobr></span>' +
 			'</p></div>';
 		} else {
 			wallPosts = wallPosts + 
 			'<div style="padding-right: 1em; padding-bottom: 0.5em"><p class="postText">' +
 			'<b>' + nck + ':</b> ' + ptx + '<br />' +
-			'<span class="lastUpdated"><nobr>' + item.lastUpdated + '</nobr></span>' +
 			'</p></div>';
 		}
 		
 		wallPosts = wallPosts + '</div></a>' +
-								'<div style="clear: both; margin: 0">' +
-								'<div style="margin-top: 0.5em;text-align: right">';
+								'<div style="clear: both; margin: 0.5em 0 0 0">';
 		
-		//wallPosts = wallPosts + '<tr><td><td><p class="likesComments">';
-		
-		// Like button
-		
-		// 1 like, 2 likes
-		var likeText = ' likes';
-		if(item.numberLikes == 1) {
-			likeText = ' like';
+		if(item.image != '') {
+			wallPosts = wallPosts + '<div style="float: left; width: 62px">&nbsp;</div>' +
+									'<div style="margin-left: 62px;">';
+		} else {
+			wallPosts = wallPosts + '<div>';
 		}
 		
+		wallPosts = wallPosts + '<div class="lastUpdated" style="float: left"><nobr>' + item.lastUpdated + '</nobr></div>' +
+								'<div style="text-align: right;">';
+		
+		// Like button
 		if(item.likedByThisUser) {
 			wallPosts = wallPosts + '<nobr><span class="likeButton buttonSelected" id="likeButton'+pid+'">' +
 									'<a href="javascript: void(0);" onClick="postUnlike('+pid+','+uid+');">' +
@@ -296,24 +294,17 @@ function buildWallView(posts) {
 									'<span id="currentLikes'+pid+'">'+item.numberLikes+'</span></a></span></nobr>';
 		}
 		
-		// Comment button
-		
-		// 1 comment, 2 comments
-		// Button selected?
-		
-		var commentText = ' comments',
-			buttonSelected = '';
+		// Comment button selected?
+		var buttonSelected = '';
 		
 		if(item.numberComments > 0) {
 			buttonSelected = " buttonSelected";
-			if(item.numberComments == 1) {
-				commentText = ' comment';
-			}
 		}
 		
 		wallPosts = wallPosts + '<nobr><span class="commentButton'+buttonSelected+'">' +
-								'<a href="#tabstrip-viewPost" onClick="window.localStorage.setItem(\'pid\', ' + pid + ');">'+item.numberComments+'</a></span></nobr>';		
-		wallPosts = wallPosts + '</div><div style="clear: both" class="wallPostOnWall"></div>'
+								'<a href="#tabstrip-viewPost" onClick="window.localStorage.setItem(\'pid\', ' + pid + ');">'+item.numberComments+'</a></span></nobr>';
+		
+		wallPosts = wallPosts + '</div></div><div style="clear: both" class="wallPostOnWall"></div>'
 	});
 	
 	return wallPosts;
@@ -326,8 +317,15 @@ function viewPost() {
 	// Show the loading screen
 	app.application.showLoading();
 	
-	// Show the back button and ensure the destination is the wall
-	showBackButtonAndChangeDestinationToWall();
+	// Show the back button and ensure the destination is the wall if we've just made a comment
+	var justPosted = window.localStorage.getItem("justPosted");
+	
+	if(justPosted == 1) {
+		showBackButtonAndChangeDestinationToWall();
+		window.localStorage.setItem("justPosted", 0);
+	} else {
+		showBackButton();
+    }
 	
 	// Make sure the navigation is hidden
 	$('.km-footer').hide();
@@ -355,7 +353,8 @@ function viewPost() {
 			originalPost = '',
 			likesList = '',
 			commentList = '',
-			nickname = '';
+			nickname = ''
+			fullImage = '';
 		
 		var nck = post[0].nickname,
 			ptx = post[0].postText,
@@ -384,8 +383,9 @@ function viewPost() {
 		// Make original post
 		if(img != '') {
 			originalPost = originalPost + '<div class="wallPost"><table width="100%"><tr>' +
-							'<td><img src="http://amway.650h.co.uk' + img + '" width="100px" height="100px" /></td>' +
+							'<td><a onClick="showFullImage()"><img src="http://amway.650h.co.uk' + img + '" width="100px" height="100px" /></a></td>' +
 							'<td valign="top"><p><b>' + nck + ':</b> ' + ptx + '</p></td></tr></table><p>'+likesList+'</p></div>';
+			fullImage = '<center><img src="http://amway.650h.co.uk' + img + '" />';
 		} else {
 			originalPost = originalPost + '<div class="wallPost"><p style="font-weight: bold">' + nck + ' said:</p>' +
 							'<p>' + ptx + '</p><p style="font-size: 0.8em">'+likesList+'</p></div>';
@@ -409,11 +409,11 @@ function viewPost() {
         }
 		
 		$('#commentList').html(commentList);
+		$('#fullImage').html(fullImage);
 	});
 	
 	app.application.hideLoading();
 }
-
 
 // Add a new comment
 function addComment() {
@@ -448,7 +448,9 @@ function addPost() {
 	window.localStorage.setItem("imageId", 0);
 	
 	// And ensure that the preview field is hidden and empty
+	$('#postBox').show();
 	$('#previewImage').hide();
+	$('#previewImageRemove').hide()
 	$("#previewImage").attr('src','');
 }
 
@@ -467,16 +469,12 @@ function postLike(pid, uid) {
 		var replaceDiv = '#currentLikes' + pid;
 		var likeButton = '#likeButton' + pid;
 		
-		var likeText = data.currentLikes;
-		
-		/*if(data.currentLikes == 1) {
-			likeText = likeText + ' like';
-        } else {
-			likeText = likeText + ' likes';
-        }*/
-		
+		// Add unlike html
+		var likeText = '<a href="javascript: void(0);" onClick="postUnlike('+pid+','+uid+');">' +
+					   '<span id="currentLikes'+pid+'">'+data.currentLikes+'</span></a>';
+
 		// Do it!
-		$(replaceDiv).html(likeText);
+		$(likeButton).html(likeText);
 		$(likeButton).addClass("buttonSelected");
 	});
 	
@@ -498,16 +496,12 @@ function postUnlike(pid, uid) {
 		var replaceDiv = '#currentLikes' + pid;
 		var likeButton = '#likeButton' + pid;
 		
-		var likeText = data.currentLikes;
-
-		/*if(data.currentLikes == 1) {
-			likeText = likeText + ' like';
-        } else {
-			likeText = likeText + ' likes';
-        }*/
+		// Post like html
+		var likeText = '<a href="javascript: void(0);" onClick="postLike('+pid+','+uid+');">' +
+					   '<span id="currentLikes'+pid+'">'+data.currentLikes+'</span></a>';
 		
 		// Do it!
-		$(replaceDiv).html(likeText);
+		$(likeButton).html(likeText);
 		$(likeButton).removeClass("buttonSelected");
 	});
 	
@@ -613,10 +607,19 @@ function photoUploadedSucessfully(r) {
 	
 	// Show a preview of the image
 	$('#previewImage').show();
+	$('#previewImageRemove').show();
 	jQuery("#previewImage").attr('src',jsonRet.imgSrc);
+	
+	// Hide the upload buttons
+	$('#postBox').hide();
 	
 	// Set the hidden field of the imageId
 	window.localStorage.setItem("imageId", jsonRet.imgId);
+}
+function removeImage() {
+	$('#postBox').show();
+	$('#previewImage').hide();
+	$('#previewImageRemove').hide();
 }
 
 
@@ -679,6 +682,26 @@ function hideAndResetBackButtonAndDeletePostButton() {
 	$("a.backButton").attr('href','#:back');
 	hideBackButton();
 	hideDeletePostButton();
+	
+	// Also clear out the post data
+	$('#originalPost').html("&nbsp;");
+	$('#commentList').html("&nbsp;");
+}
+
+// Show full image (and associated close button)
+function showFullImage() {
+	$('#postDetail').hide();
+	$('#fullImage').show();
+	$('#fullImageClose').show();
+	hideBackButton();
+}
+
+// Hide full image (and associated close button)
+function hideFullImage() {
+	$('#fullImage').hide();
+	$('#fullImageClose').hide();
+	$('#postDetail').show();
+	showBackButton();
 }
 
 // Handle error in AJAX

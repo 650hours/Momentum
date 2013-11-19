@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>75644ce3-0632-4f8c-bc7c-47c736eaad72</ProjectGuid>
     <ProjectTypeGuids>{070BCB52-5A75-4F8C-A973-144AF0EAFCC9}</ProjectTypeGuids>
-    <AppIdentifier>com.amway.momentum2013</AppIdentifier>
+    <AppIdentifier>com.sixfiftyhours.amwaymomentum</AppIdentifier>
     <ProjectName>Amway Momentum</ProjectName>
     <IsRunnable>true</IsRunnable>
     <FrameworkVersion>3.0.0</FrameworkVersion>

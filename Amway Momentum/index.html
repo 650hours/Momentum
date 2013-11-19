@@ -65,6 +65,8 @@
 				
 					<div class="amway"></div>
 					
+					<p>v1.20</p>
+					
 				</div>
 				
             </div>
@@ -138,7 +140,7 @@
 			
 				<div>
 					<ul data-role="listview" data-style="inset" data-type="group">
-						<li><h2>Your Workshops</h2></li>
+						<li><h2>Your Workshop</h2></li>
 						<div id="userWorkshopList">&nbsp;</div>
 					</ul>
 					<ul data-role="listview" data-style="inset" data-type="group">
@@ -223,13 +225,18 @@
 			data-show="viewPost"
 			data-before-hide="hideAndResetBackButtonAndDeletePostButton">
 			
-			<div class="view-content">
+			<div class="view-content" id="postDetail">
 				<div id="originalPost" class="op_post">&nbsp;</div>
 				<div id="commentList" class="op_comments">&nbsp;</div>
 				<div id="commentMade">&nbsp;</div>
 				
 				<p><center><a href="#tabstrip-addComment" data-role="button">Make a comment</a></center></p>
 			</div>
+			
+			<div id="fullImage" style="display: none">&nbsp;</div>
+			<div id="fullImageClose" style="display: none">
+				<p><center><a onClick="hideFullImage()" data-role="button">close</a></center></p>
+            </div>
 		
 		</div>
 
@@ -271,39 +278,45 @@
 			data-before-hide="hideBackButton">
 			
 			<div class="view-content">
-					<div id="postBox">
+				<div id="postBox">
 
-						<h3>Select a photo (optional)</h3>
-						
-						<a  id="photoLibrary"
-							data-role="button"
-							onclick="getImageFromLibrary();"
-							class="login-button"
-							style="background-color: #f0f0f0; color: green">Existing photo</a>
+					<h3>Select a photo (optional)</h3>
+					
+					<a  id="photoLibrary"
+						data-role="button"
+						onclick="getImageFromLibrary();"
+						class="login-button"
+						style="background-color: #f0f0f0; color: green; width: 40%">Existing</a>
 
-						<a  id="photoCamera"
-							data-role="button"
-							onclick="getImageFromCamera();"
-							class="login-button"
-							style="background-color: #f0f0f0; color: green">Take a new photo</a>
-						
-					<p><img style="display:none;" id="previewImage" width="200px" /></p>
-						
-					<h3>Make a comment</h3>
-						
-					<textarea data-bind="value: newpost"
-								class="newPost" rows="10"
-								style="background-color: white; border-style: solid; border-width: 1px; width: 98%; color: black">
-                    </textarea>
-						
-					<div class="buttonArea">
-	                    <a  id="postnewpost"
-							data-role="button"
-							data-bind="click: onNewPost"
-							class="login-button"
-							style="background-color: #f0f0f0; color: green">Post Comment</a>
-	                </div>
+					<a  id="photoCamera"
+						data-role="button"
+						onclick="getImageFromCamera();"
+						class="login-button"
+						style="background-color: #f0f0f0; color: green; width: 40%">New</a>
+					
 				</div>
+						
+				<p>
+					<center>
+						<img style="display:none;" id="previewImage" width="100px" height="100px" /> <br />
+						<a style="display:none;" id="previewImageRemove" href="javascript: removeImage();">Remove</a>
+					</center>
+                </p>
+					
+				<h3>Make a comment</h3>
+					
+				<textarea data-bind="value: newpost"
+							class="newPost" rows="10"
+							style="background-color: white; border-style: solid; border-width: 1px; width: 98%; color: black">
+                </textarea>
+					
+				<div class="buttonArea">
+                    <a  id="postnewpost"
+						data-role="button"
+						data-bind="click: onNewPost"
+						class="login-button"
+						style="background-color: #f0f0f0; color: green">Post Comment</a>
+                </div>
 			</div>
 		</div>
 
@@ -348,7 +361,7 @@
 				<h1><div id="tripadvisorTitle">&nbsp;</div></h1>
 				<div id="tripadvisorText" style="text-align: left">&nbsp;</div>
 				<h4>Please select your country to download your TripAdvisor guide to New Delhi</h4>
-				<select name="taCountry" id="taCountry">
+				<select name="taCountry" id="taCountry" style="width: 120px; height: 34px; background-color: #f08638; color: green; font-size: 1.2em;">
 					<option value="1">India</option>
 					<option value="2">Germany</option>
 					<option value="3">UK</option>
@@ -394,7 +407,7 @@
                     <a href="#tabstrip-workshops" data-icon="organize">Workshops</a>
 					<a href="#tabstrip-wall" data-icon="contacts">Wall</a>
                     <a href="#tabstrip-hospitality" data-icon="about">Hospitality</a>
-					<a href="#tabstrip-logout" data-icon="delete">Log out</a>
+					<a href="#tabstrip-logout" data-icon="details">Log out</a>
                 </div>
             </div>
         </div>
