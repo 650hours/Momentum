@@ -450,7 +450,7 @@ function addPost() {
 	// And ensure that the preview field is hidden and empty
 	$('#postBox').show();
 	$('#previewImage').hide();
-	$('#previewImageRemove').hide()
+	$('#previewImageRemove').hide();
 	$("#previewImage").attr('src','');
 }
 
