@@ -223,7 +223,7 @@ function loadWall() {
 	var uid = window.localStorage.getItem("userShortId");
 
 	$.ajax({
-	url: 'http://amway.650h.co.uk/index/default/getWallposts/0/20/'+uid,
+	url: 'http://amway.650h.co.uk/index/default/getWallposts/0/30/'+uid,
 	error: handleAjaxError, cache: false}).done(function(data) {
 		
 		var wallPosts = '';
@@ -280,7 +280,7 @@ function buildWallView(posts) {
 			wallPosts = wallPosts + '<div>';
 		}
 		
-		wallPosts = wallPosts + '<div class="lastUpdated" style="float: left"><nobr>' + item.lastUpdated + '</nobr></div>' +
+		wallPosts = wallPosts + '<div class="lastUpdated" style="float: left; padding-top: 4px"><nobr>' + item.lastUpdated + '</nobr></div>' +
 								'<div style="text-align: right;">';
 		
 		// Like button
