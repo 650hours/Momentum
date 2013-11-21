@@ -65,7 +65,7 @@
 				
 					<div class="amway"></div>
 					
-					<p>v1.21</p>
+					<p>v1.22</p>
 					
 				</div>
 				
@@ -278,11 +278,8 @@
 			data-before-hide="hideBackButton">
 			
 			<div class="view-content">
-
-				<textarea data-bind="value: newpost"
-							class="newPost" rows="5"
-							style="background-color: white; border-style: solid; border-width: 1px; width: 98%; color: black">
-                </textarea>
+				
+			<textarea id="newPost" rows="5" style="background-color: white; border-style: solid; border-width: 1px; width: 98%; color: black"></textarea>
 				
 				<div id="postBox">
 
@@ -308,14 +305,9 @@
 						<a style="display:none;" id="previewImageRemove" href="javascript: removeImage();">Remove</a>
 					</center>
                 </p>
-					
-				<div class="buttonArea">
-                    <a  id="postnewpost"
-						data-role="button"
-						data-bind="click: onNewPost"
-						class="login-button"
-						style="background-color: #f0f0f0; color: green">Add Post</a>
-                </div>
+				
+				<a onClick="javascript: addPostDo(); return false;" data-role="button">Add Post</a>
+
 			</div>
 		</div>
 
@@ -360,20 +352,8 @@
 				<h1><div id="tripadvisorTitle">&nbsp;</div></h1>
 				<div id="tripadvisorText" style="text-align: left">&nbsp;</div>
 				<a onclick="window.open('https://itunes.apple.com/app/tripadvisor-offline-city-guides/id480066121','_blank');" data-role="button">Download TripAdvisor New Delhi</a>
-
-				<!--//<h4>Please select your country to download your TripAdvisor guide to New Delhi</h4>
-				<select name="taCountry" id="taCountry" style="width: 120px; height: 34px; background-color: #f08638; color: green; font-size: 1.2em;">
-					<option value="1">India</option>
-					<option value="2">Germany</option>
-					<option value="3">UK</option>
-					<option value="4">Russia</option>
-					<option value="5">USA</option>
-                </select>
-				<a onclick="javascript: tripAdvisor(); return false;" data-role="button">Select</a>
-				<div id="taLinkButton" style="text-align: left">&nbsp;</div>
-				<p style="text-align: left">In case your Apple itunes account is associated to another country than the above mentioned in the dropdown, please download the Tripadvisor City Guides app in your appstore account and install the New Delhi maps.</p>//-->
-			
-				
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
             </div>
 			
         </div>

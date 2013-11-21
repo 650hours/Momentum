@@ -27,7 +27,7 @@
 			var uid = window.localStorage.getItem("userShortId");
 			
 			$.ajax({
-    			url: 'http://amway.650h.co.uk/index/default/newPost/' + uid + '/' + encodeURI(newpost) + '/' + imageId,
+    			url: 'http://amway.650h.co.uk/index/default/newPost/' + uid + '/' + btoa(newpost) + '/' + imageId,
 				error: function() {
 					$("#resultBlock").html('<h2>Sorry, an error ocurred. Please try again.</h2>');	
                 },
@@ -58,7 +58,7 @@
 			var uid = window.localStorage.getItem("userShortId");
 			
 			$.ajax({
-    			url: 'http://amway.650h.co.uk/index/default/postComment/' + pid + '/' + uid + '/' + encodeURI(comment),
+    			url: 'http://amway.650h.co.uk/index/default/postComment/' + pid + '/' + uid + '/' + btoa(comment),
 				error: function() {
 					$("#resultBlock").html('<h2>Sorry, an error ocurred. Please try again.</h2>');	
                 },
