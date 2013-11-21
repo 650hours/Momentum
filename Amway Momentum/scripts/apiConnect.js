@@ -66,33 +66,6 @@ function loadHospitality() {
 }
 
 
-// Handle tripadvisor request
-function tripAdvisor() {
-	
-	var country = $("#taCountry").val();
-	var taButtonLink = taButtonText = '';
-	
-	if(country == 1) {
-		taButtonLink = "https://itunes.apple.com/in/app/tripadvisor-offline-city-guides/id480066121";
-		taButtonText = "India";
-    } else if(country == 2) {
-		taButtonLink = "https://itunes.apple.com/de/app/tripadvisor-offline-city-guides/id480066121";
-		taButtonText = "Germany";
-    } else if(country == 3) {
-		taButtonLink = "https://itunes.apple.com/de/app/tripadvisor-offline-city-guides/id480066121";
-		taButtonText = "the UK";
-    } else if(country == 4) {
-		taButtonLink = "https://itunes.apple.com/de/app/tripadvisor-offline-city-guides/id480066121";
-		taButtonText = "Russia";
-    } else {
-		taButtonLink = "https://itunes.apple.com/de/app/tripadvisor-offline-city-guides/id480066121";
-		taButtonText = "the USA";
-    }
-	
-	// Add in the button!
-	$("#taLinkButton").html("<p><center><a onclick=\"window.open('" + taButtonLink + "','_blank');\" style='text-decoration: underline'>TripAdvisor App for " + taButtonText + "</a></center></p>");
-}
-
 // Load workshop list
 function loadWorkshopList() {
 	
@@ -220,6 +193,9 @@ function loadWall() {
 	// Show the add post button
 	showAddPostButton();
 	
+	// Hide the back button
+	hideBackButton();
+	
 	var uid = window.localStorage.getItem("userShortId");
 
 	$.ajax({
@@ -248,7 +224,7 @@ function buildWallView(posts) {
 	$.each(posts, function(i,item) {
 		
 		var pid = item.wallpostId,
-			ptx = item.postText,
+			ptx = nl2br(item.postText),
 			nck = item.nickname;
 		
 		wallPosts = wallPosts +
@@ -357,7 +333,7 @@ function viewPost() {
 			fullImage = '';
 		
 		var nck = post[0].nickname,
-			ptx = post[0].postText,
+			ptx = nl2br(post[0].postText),
 			img = post[0].image;
 		
 		// Do we show the delete button (only if this user is the original poster)?
@@ -402,7 +378,8 @@ function viewPost() {
 					nickname = comment.nickname;
                 }
 				commentList = commentList + '<div class="op_commentBox">' +
-											'<p><span style="font-weight: bold">' + nickname + '</span> replied:</p><p> ' + comment.commentText + '</p></div>';
+											'<p><span style="font-weight: bold">' + nickname + '</span> replied:</p>' +
+											'<p> ' + nl2br(comment.commentText) + '</p></div>';
 			});
 		} else {
 			commentsList = "No comments";
@@ -415,7 +392,7 @@ function viewPost() {
 	app.application.hideLoading();
 }
 
-// Add a new comment
+// Add a new comment (prepare)
 function addComment() {
 	
 	// Show the back button
@@ -431,7 +408,8 @@ function addComment() {
 
 }
 
-// Add a new post
+
+// Add a new post (prepare)
 function addPost() {
 	
 	// Show the back button
@@ -441,8 +419,7 @@ function addPost() {
 	$('.km-footer').hide();
 	
 	// Clear the textarea
-	$('.newPost').val('');
-	$('.newPost').text('');
+	$('#newPost').val('');
 	
 	// Make sure that we have no imageId in cache (in case they bailed mid way through a post)
 	window.localStorage.setItem("imageId", 0);
@@ -452,6 +429,37 @@ function addPost() {
 	$('#previewImage').hide();
 	$('#previewImageRemove').hide();
 	$("#previewImage").attr('src','');
+}
+
+// Add a new post (do)
+function addPostDo () {
+	
+	var newpost = $("#newPost").val();
+	newPost = newpost.trim();
+	
+	if(newpost === '') {
+		navigator.notification.alert('Please enter some text into your post!', function () { }, 'Post failed', 'OK');
+		return;
+	}
+			
+	// Get the imageId if one is set
+	var imageId = window.localStorage.getItem("imageId");
+	
+	// We need the userId to attribute the post to
+	var uid = window.localStorage.getItem("userShortId");
+	
+	$.ajax({
+		url: 'http://amway.650h.co.uk/index/default/newPost/' + uid + '/' + btoa(newpost) + '/' + imageId,
+		error: function() {
+			$("#resultBlock").html('<h2>Sorry, an error ocurred. Please try again.</h2>');	
+        },
+		cache: false}).done(function(data) {
+			$('#postComment').val('');
+			window.localStorage.setItem("imageId", 0);
+			navigator.notification.alert('Your new post has been created and will immediately show on the wall.', function () { }, 'Sucessful Post', 'OK');
+
+			navigateToWall();
+	});
 }
 
 
@@ -702,6 +710,22 @@ function hideFullImage() {
 	$('#fullImageClose').hide();
 	$('#postDetail').show();
 	showBackButton();
+}
+
+// Navigate to the wallpost after creation.
+function navigateToWall() {
+	app.application.navigate("#tabstrip-wall");
+}
+
+// Navigate to a specific post.
+function navigateToPost() {
+	app.application.navigate("#tabstrip-viewPost");
+}
+
+// New line to break
+function nl2br(str) {   
+    var breakTag = '<br />';    
+    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
 }
 
 // Handle error in AJAX
