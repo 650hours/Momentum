@@ -404,10 +404,33 @@ function addComment() {
 	// Clear the textarea
 	$('.newComment').val('');
 	$('.newComment').text('');
-	
-
 }
 
+// Add a new comment (do)
+function addCommentDo() {
+	
+	var comment = $("#newComment").val();
+	comment = comment.trim();
+
+	if(comment === '') {
+		navigator.notification.alert('Please enter some text into your comment!', function () { }, 'Post failed', 'OK');
+		return;
+	}
+	
+	// We need the original post and the ID of the user making the comment
+	var pid = window.localStorage.getItem("pid");
+	var uid = window.localStorage.getItem("userShortId");
+	
+	$.ajax({
+		url: 'http://amway.650h.co.uk/index/default/postComment/' + pid + '/' + uid + '/' + btoa(comment),
+		error: function() {
+			$("#resultBlock").html('<h2>Sorry, an error ocurred. Please try again.</h2>');	
+        },
+		cache: false}).done(function(data) {
+			window.localStorage.setItem("justPosted", 1);
+			navigateToPost();
+	});
+}
 
 // Add a new post (prepare)
 function addPost() {

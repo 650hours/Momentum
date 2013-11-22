@@ -65,7 +65,7 @@
 				
 					<div class="amway"></div>
 					
-					<p>v1.23</p>
+					<p>v1.24</p>
 					
 				</div>
 				
@@ -252,17 +252,8 @@
 			
 			<div id="commentBox">
 				<div class="view-content">
-					<textarea data-bind="value: comment"
-								id="newComment" class="newComment" rows="3"
-								style="background-color: #FFFFFF; border-style: solid; border-width: 1px; width: 98%; color: black">
-					</textarea>
-					<div class="buttonArea">
-						<a  id="postcomment"
-						data-role="button"
-						data-bind="click: onPostComment"
-						class="login-button"
-						style="background-color: #f0f0f0; color: green">Post</a>
-					</div>
+					<textarea id="newComment" rows="5" style="background-color: #FFFFFF; border-style: solid; border-width: 1px; width: 98%; color: black"></textarea>
+					<a onClick="javascript: addCommentDo(); return false;" data-role="button">Add Comment</a>
 				</div>
 			</div>
 		</div>
@@ -279,7 +270,7 @@
 			
 			<div class="view-content">
 				
-			<textarea id="newPost" rows="5" style="background-color: white; border-style: solid; border-width: 1px; width: 98%; color: black"></textarea>
+				<textarea id="newPost" rows="5" style="background-color: white; border-style: solid; border-width: 1px; width: 98%; color: black"></textarea>
 				
 				<div id="postBox">
 

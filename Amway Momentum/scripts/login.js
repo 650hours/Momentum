@@ -9,32 +9,6 @@
 		nickname: "",
         userShortId: "",
 		
-		// This is nothing to do with login - it handles comment submission from an existing comment!
-		onPostComment: function () {
-			
-			var that = this,
-				comment = that.get('comment').trim();
-			
-			if(comment === '') {
-                navigator.notification.alert('Please enter a comment!', function () { }, 'Comment failed', 'OK');
-                return;
-            }
-			
-			// We need the original post and the ID of the user making the comment
-			var pid = window.localStorage.getItem("pid");
-			var uid = window.localStorage.getItem("userShortId");
-			
-			$.ajax({
-    			url: 'http://amway.650h.co.uk/index/default/postComment/' + pid + '/' + uid + '/' + btoa(comment),
-				error: function() {
-					$("#resultBlock").html('<h2>Sorry, an error ocurred. Please try again.</h2>');	
-                },
-				cache: false}).done(function(data) {
-					window.localStorage.setItem("justPosted", 1);
-					navigateToPost();
-			    });
-		},
-		
         onLogin: function () {
 			var that = this,
 				username = that.get('username').trim(),
@@ -108,15 +82,5 @@
 		tabstrip.switchTo("#tabstrip-home");
 		hideNavigation();
 	}
-	
-	// Navigate to the wallpost after creation.
-	function navigateToWall() {
-		app.application.navigate("#tabstrip-wall");
-	}
-	
-	// Navigate to a specific post.
-	function navigateToPost() {
-		app.application.navigate("#tabstrip-viewPost");
-    }
-	
+		
 })(window);
