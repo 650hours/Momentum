@@ -181,7 +181,7 @@ function loadTopic(e) {
 }
 
 
-// Load the wall - starts with 20 posts, but supports paging
+// Load the wall - starts with 30 posts, but supports paging
 function loadWall() {
 	
 	// Show the loading screen
@@ -420,6 +420,9 @@ function addPost() {
 	
 	// Clear the textarea
 	$('#newPost').val('');
+	
+	// Scroll to the top of the page
+	$(".km-scroll-container").css("-webkit-transform", "");
 	
 	// Make sure that we have no imageId in cache (in case they bailed mid way through a post)
 	window.localStorage.setItem("imageId", 0);
